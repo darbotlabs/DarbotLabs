@@ -3,7 +3,7 @@ Decentralized
 Aautonomous
 Research
 Bounded
-Oorchestration
+Orchestration
 Taproot
 
 ### Novel Framework from DarbotLabs ###
