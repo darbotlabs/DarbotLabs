@@ -1,37 +1,38 @@
 ## Welcome to DarbotLabs
-Decentralized
-Aautonomous
-Research
-Bounded
-Orchestration
-Taproot
+Decentralized Aautonomous Reasoning with Bounded Orchestration Taproot
 
 ### Novel Framework from DarbotLabs ###
-Darbot- Decentralized Autonomous Research (ro) BOT (ics) 
+Decentralized Autonomous Research (ro) BOT (ics) 
 Decentralized Autononous Reasoning
 
-DarbotLM- Darbot Language Model, DLM
+### DarbotLM- Darbot Language Model, DLM
 
-Darbot Language Model Context Protocol, DLMCP
-Darbot Language Manifest Control Protocol
-Manifest Control Plane
-Darbot Language Model Framework- "refactor and rebuild everything to be a "darbot" tool
-DLMF, DLM, DLMP
-Darbot Vision, Darbot Vision Management 
-DarbotAI
-Darbitnet
-Darbotian Philosophy
-Darbotics
-Darbot Framework
-Darbot Deepmind
-Darbot MCP
-Tacklebox
-Buckets
-Darbot Memory
-MEMLM- modular efficient memory language model
-BitnetLM
-CardLM (MCP GUI Elements Coding)
-Agentcards (MCP GUI TEMPLATES)
+#Darbot Language Model Context Protocol, DLMCP
+#Darbot Language Manifest Control Protocol
+#Manifest Control Plane
+
+
+#Darbot Language Model Framework- unified task context 
+
+#DLMF, DLM, DLMP
+
+#Darbot Vision, Darbot Vision Management 
+#DarbotAI
+#Darbitnet
+#Darbotian Philosophy
+#Darbotics
+#Darbot Framework
+#Darbot Deepmind
+#Darbot MCP
+#Tacklebox
+#Buckets
+#Darbot Memory
+
+
+#MEMLM- modular efficient memory language model
+#BitnetLM
+#CardLM (MCP GUI Elements Coding)
+#Agentcards (MCP GUI TEMPLATES)
 
 
 
