@@ -1,5 +1,5 @@
 ## Welcome to DarbotLabs
-Decentralized Aautonomous Reasoning with Bounded Orchestration Taproot
+Decentralized Autonomous Reasoning with Bounded Orchestration Taproot
 
 ### Novel Framework from DarbotLabs ###
 Decentralized Autonomous Research (ro) BOT (ics) 
