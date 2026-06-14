@@ -14,7 +14,8 @@ Decentralized Autononous Reasoning
 
 #Darbot Language Model Framework- unified task context 
 
-#DLMF, DLM, DLMP
+DarbotLM 
+DLMCP
 
 #Darbot Vision, Darbot Vision Management 
 #DarbotAI
