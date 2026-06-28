@@ -116,17 +116,7 @@
       --cp-scrollbar-thumb-hover: var(--cp-clippyflow-nitrous-thumb-hover);
       --cp-user-message-bg: hsl(195, 12%, 16%);
       --cp-assistant-message-bg: hsla(200, 20%, 11%, 0.92);
-      --cp-toggle-gradient: linear-gradient(135deg, hsl(142, 100%, 74%), hsl(214, 78%, 48%));
-      --cp-toggle-gradient-hover: linear-gradient(135deg, hsl(142, 100%, 80%), hsl(214, 86%, 56%));
     }
-
-    :root,
-    html[data-theme="dark"] {
-      --cp-toggle-gradient: linear-gradient(135deg, hsl(142, 100%, 74%), hsl(214, 78%, 48%));
-      --cp-toggle-gradient-hover: linear-gradient(135deg, hsl(142, 100%, 80%), hsl(214, 86%, 56%));
-    }
-
-    html[data-theme="dark"],
     html[data-theme="nightflow"] {
       color-scheme: dark;
       --cp-bg: hsl(205, 35%, 7%);
@@ -160,6 +150,13 @@
       --cp-user-message-bg: hsl(205, 22%, 15%);
       --cp-assistant-message-bg: hsla(205, 28%, 10%, 0.92);
     }
+    :root,
+    html[data-theme="dark"],
+    html[data-theme="clippyflow"],
+    html[data-theme="nightflow"] {
+      --cp-toggle-gradient: linear-gradient(135deg, var(--cp-success), var(--cp-border-strong));
+      --cp-toggle-gradient-hover: linear-gradient(135deg, var(--cp-accent), var(--cp-border-strong));
+    }
 
     * {
       box-sizing: border-box;
@@ -188,18 +185,20 @@
     }
 
     .app {
+      --header-height: 6.25rem;
       display: grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: var(--header-height) 1fr;
       height: 100vh;
     }
 
     .topbar {
       z-index: 10;
       display: grid;
-      grid-template-columns: minmax(18rem, 1fr) auto;
+      grid-template-columns: minmax(20rem, 1fr) auto;
       gap: 1rem;
       align-items: center;
-      padding: 1rem 1.25rem;
+      min-height: var(--header-height);
+      padding: 0.8rem 1.25rem;
       border-bottom: 1px solid var(--cp-border-strong);
       background: var(--cp-panel-strong);
       box-shadow: var(--cp-shadow);
@@ -217,6 +216,7 @@
       display: grid;
       width: 2.75rem;
       height: 2.75rem;
+      flex: 0 0 auto;
       place-items: center;
       border: 1px solid var(--cp-border-strong);
       border-radius: 16px;
@@ -241,21 +241,27 @@
     }
 
     .brand .header-note {
-      max-width: 72rem;
+      max-width: 76rem;
       color: var(--cp-text-soft);
       font-size: 0.78rem;
       line-height: 1.35;
     }
 
-    .toolbar {
+    .toolbar,
+    .snap-links {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 0.5rem;
+      align-items: center;
+    }
+
+    .toolbar {
+      justify-content: flex-end;
     }
 
     .chip,
-    .btn {
+    .btn,
+    .snap-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -278,7 +284,8 @@
       text-transform: uppercase;
     }
 
-    .btn.primary {
+    .btn.primary,
+    .snap-link {
       border-color: var(--cp-accent);
       background: var(--cp-accent);
       color: var(--cp-accent-fg);
@@ -299,7 +306,9 @@
     }
 
     .btn:hover,
-    .btn:focus-visible {
+    .btn:focus-visible,
+    .snap-link:hover,
+    .snap-link:focus-visible {
       border-color: var(--cp-border-strong);
       outline: 2px solid var(--cp-highlight);
       outline-offset: 2px;
@@ -309,6 +318,9 @@
       position: relative;
       overflow: auto;
       min-height: 0;
+      scroll-behavior: smooth;
+      scroll-snap-type: both mandatory;
+      overscroll-behavior: contain;
       background:
         linear-gradient(90deg, var(--cp-border) 1px, transparent 1px),
         linear-gradient(180deg, var(--cp-border) 1px, transparent 1px),
@@ -316,47 +328,31 @@
       background-size: 4rem 4rem, 4rem 4rem, auto;
     }
 
-    .infinite-canvas {
-      position: relative;
-      width: 220rem;
-      min-height: 140rem;
-      padding: 4rem;
-    }
-
-    .board-meta {
-      position: absolute;
-      top: 4rem;
-      left: 4rem;
+    .viewport-grid {
       display: grid;
-      gap: 0.5rem;
-      width: 24rem;
-      padding: 1rem;
-      border: 1px solid var(--cp-card-outline, var(--cp-border));
-      border-radius: 16px;
-      background: var(--cp-panel);
-      box-shadow: var(--cp-shadow);
+      grid-template-columns: repeat(3, 100vw);
+      grid-template-rows: repeat(2, calc(100vh - var(--header-height)));
+      width: 300vw;
+      min-height: calc((100vh - var(--header-height)) * 2);
     }
 
-    .board-meta h2,
-    .notice h2,
-    .pin h3 {
-      margin: 0;
-      color: var(--cp-text);
-      letter-spacing: -0.03em;
-    }
-
-    .board-meta p,
-    .pin p {
-      margin: 0;
-      color: var(--cp-text-muted);
-      line-height: 1.5;
+    .viewport-cell {
+      position: relative;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      width: 100vw;
+      height: calc(100vh - var(--header-height));
+      min-height: 40rem;
+      padding: clamp(1rem, 3vw, 3rem);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
 
     .notice {
-      position: absolute;
-      top: 4rem;
-      left: 30rem;
-      width: 62rem;
+      width: min(78rem, calc(100vw - 2rem));
+      max-height: calc(100vh - var(--header-height) - 2rem);
+      overflow: auto;
       padding: clamp(1rem, 2vw, 1.5rem);
       border: 1px solid var(--cp-card-outline, var(--cp-border));
       border-radius: 16px;
@@ -368,10 +364,9 @@
 
     .notice::before {
       content: "";
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
+      display: block;
       height: 0.25rem;
+      margin: -1.5rem -1.5rem 1.25rem;
       border-radius: 16px 16px 0 0;
       background: var(--cp-brand-spectrum, var(--cp-accent));
     }
@@ -394,14 +389,22 @@
       text-transform: uppercase;
     }
 
+    .notice h2,
+    .snap-card h2,
+    .board-meta h2 {
+      margin: 0;
+      color: var(--cp-text);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
     .notice h2 {
       font-size: clamp(1.55rem, 4vw, 3.2rem);
-      line-height: 0.98;
     }
 
     .notice-subtitle {
       margin: 0.75rem 0 0;
-      max-width: 46rem;
+      max-width: 48rem;
       color: var(--cp-text-muted);
       font-size: 1rem;
       line-height: 1.5;
@@ -438,130 +441,83 @@
       margin-top: 1rem;
     }
 
-    .sections {
+    .sections,
+    .side-rail,
+    .snap-card,
+    .board-meta,
+    .pin-stack {
       display: grid;
       gap: 0.75rem;
     }
 
-    .clause {
-      padding: 0.9rem;
-      border: 1px solid var(--cp-border);
-      border-radius: 16px;
-      background: var(--cp-assistant-message-bg, var(--cp-surface-soft));
-    }
-
-    .clause h3 {
-      margin: 0 0 0.35rem;
-      color: var(--cp-text);
-      font-size: 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .clause p {
-      margin: 0;
-      color: var(--cp-text-soft);
-      line-height: 1.6;
-    }
-
-    .side-rail {
-      display: grid;
-      align-content: start;
-      gap: 0.75rem;
-    }
-
+    .clause,
     .rail-card,
-    .pin {
+    .board-meta,
+    .pin,
+    .snap-card {
       border: 1px solid var(--cp-card-outline, var(--cp-border));
       border-radius: 16px;
       background: var(--cp-panel);
       box-shadow: var(--cp-shadow);
     }
 
-    .rail-card {
+    .clause {
       padding: 0.9rem;
+      background: var(--cp-assistant-message-bg, var(--cp-surface-soft));
     }
 
-    .rail-card h3 {
-      margin: 0 0 0.5rem;
+    .clause h3,
+    .rail-card h3,
+    .pin h3 {
+      margin: 0 0 0.35rem;
       color: var(--cp-text);
-      font-size: 0.95rem;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
     }
 
+    .clause p,
     .rail-card p,
-    .rail-card li {
-      color: var(--cp-text-muted);
-      font-size: 0.86rem;
-      line-height: 1.5;
-    }
-
-    .rail-card p,
-    .rail-card ul {
+    .rail-card li,
+    .pin p,
+    .snap-card p,
+    .board-meta p {
       margin: 0;
+      color: var(--cp-text-soft);
+      line-height: 1.6;
+    }
+
+    .rail-card,
+    .board-meta,
+    .pin,
+    .snap-card {
+      padding: 1rem;
     }
 
     .rail-card ul {
       display: grid;
       gap: 0.35rem;
+      margin: 0;
       padding-left: 1.1rem;
     }
 
-    .pin {
-      position: absolute;
+    .board-meta,
+    .snap-card {
+      width: min(62rem, calc(100vw - 2rem));
+    }
+
+    .board-meta h2,
+    .snap-card h2 {
+      font-size: clamp(1.6rem, 4vw, 3.4rem);
+    }
+
+    .pin-stack {
+      width: min(70rem, calc(100vw - 2rem));
+    }
+
+    .pin-grid {
       display: grid;
-      gap: 0.5rem;
-      padding: 0.9rem;
-      width: 17rem;
-    }
-
-    .pin.one {
-      top: 15.5rem;
-      left: 4rem;
-      transform: rotate(-1deg);
-    }
-
-    .pin.two {
-      top: 29rem;
-      left: 4rem;
-      transform: rotate(1.5deg);
-    }
-
-    .pin.three {
-      top: 42.5rem;
-      left: 4rem;
-      transform: rotate(1deg);
-    }
-
-    .pin h3 {
-      font-size: 0.95rem;
-    }
-
-    .connector {
-      position: absolute;
-      height: 1px;
-      background: var(--cp-border-strong);
-      transform-origin: left center;
-      opacity: 0.75;
-    }
-
-    .connector.a {
-      top: 20rem;
-      left: 21rem;
-      width: 9.5rem;
-      transform: rotate(-12deg);
-    }
-
-    .connector.b {
-      top: 33rem;
-      left: 19rem;
-      width: 11.5rem;
-      transform: rotate(-9deg);
-    }
-
-    .connector.c {
-      top: 47rem;
-      left: 21rem;
-      width: 9.5rem;
-      transform: rotate(12deg);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
     }
 
     code {
@@ -604,6 +560,8 @@
       }
 
       .app {
+        --header-height: auto;
+        display: block;
         height: auto;
       }
 
@@ -619,25 +577,31 @@
 
       .canvas-shell {
         overflow: visible;
+        scroll-snap-type: y mandatory;
       }
 
-      .infinite-canvas {
+      .viewport-grid {
+        display: block;
         width: auto;
         min-height: auto;
-        padding: 1rem;
       }
 
-      .board-meta,
-      .notice,
-      .pin {
-        position: static;
+      .viewport-cell {
         width: auto;
-        margin-bottom: 1rem;
-        transform: none;
+        height: auto;
+        min-height: 100vh;
       }
 
-      .connector {
-        display: none;
+      .notice {
+        max-height: none;
+      }
+
+      .pin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stamp {
+        transform: none;
       }
     }
   </style>
@@ -648,155 +612,162 @@
       <div class="brand">
         <div class="mark" aria-hidden="true">DL</div>
         <div>
-          <h1>Lost Futures of Tomorrow</h1>
+          <h1>Lost Terminals of Tomorrow</h1>
           <p>DarbotLabs bulletin board for open specifications, rights notices, and research artifacts.</p>
-          <p class="header-note">Single-file HTML artifact. The notice text is presented as a research documentation rights notice for DarbotLabs. Future versions can promote this canvas into draggable cards, zoom controls, linked artifacts, and scheduled Livetile snapshots.</p>
+          <p class="header-note">Single-file HTML artifact. The notice text is presented as a research documentation rights notice for DarbotLabs. Future versions can promote this viewport grid into draggable cards, zoom controls, linked artifacts, and scheduled Livetile snapshots.</p>
         </div>
       </div>
       <div class="toolbar" aria-label="Page actions">
         <span class="chip">Clippyflow</span>
-        <span class="chip">Open specifications</span>
+        <span class="chip">Snapscroll</span>
+        <a class="btn" href="#notice">Notice</a>
+        <a class="btn" href="#board">Board</a>
+        <a class="btn" href="#lanes">Lanes</a>
         <button class="btn theme" id="themeToggle" type="button">Toggle theme</button>
-        <button class="btn primary" id="focusNotice" type="button">Focus notice</button>
       </div>
     </header>
 
     <main class="canvas-shell" id="canvasShell">
-      <section class="infinite-canvas" aria-label="Infinite bulletin board canvas">
-        <aside class="board-meta" aria-label="Board metadata">
-          <h2>Bulletin board v0.1</h2>
-          <p>This page is intentionally a single pinned notice today. The canvas is sized and styled for future draggable cards, timelines, diagrams, and live GenLM Livetiles.</p>
-        </aside>
+      <section class="viewport-grid" aria-label="Full viewport snap-scroll board">
+        <article class="viewport-cell" id="notice" aria-labelledby="notice-title">
+          <div class="notice">
+            <header class="notice-header">
+              <div>
+                <p class="eyebrow">DarbotLabs public notice</p>
+                <h2 id="notice-title">Intellectual Property Rights Notice</h2>
+                <p class="notice-subtitle">Technical documentation for artificial and architectural intelligence, agents, apps, services, protocols, file formats, data portability, computer languages, encoding, encryption, and standards support.</p>
+              </div>
+              <div class="stamp" aria-label="Research lab notice">
+                <strong>Private research lab</strong>
+                <span>Not for hire</span>
+              </div>
+            </header>
 
-        <article class="notice" id="notice" aria-labelledby="notice-title">
-          <header class="notice-header">
-            <div>
-              <p class="eyebrow">DarbotLabs public notice</p>
-              <h2 id="notice-title">Intellectual Property Rights Notice</h2>
-              <p class="notice-subtitle">Technical documentation for artificial and architectural intelligence, agents, apps, services, protocols, file formats, data portability, computer languages, encoding, encryption, and standards support.</p>
+            <div class="notice-grid">
+              <div class="sections">
+                <section class="clause">
+                  <h3>Technical Documentation</h3>
+                  <p>DarbotLabs publishes Open Specifications documentation for artificial and architectural intelligence, agents, apps, services, protocols, file formats, data portability, computer languages, encoding, encryption, and standards support. Additionally, overview documents cover inter-protocol relationships and interactions.</p>
+                </section>
+                <section class="clause">
+                  <h3>Copyrights</h3>
+                  <p>This documentation is covered by DarbotLabs copyrights. Regardless of any other terms contained in the terms of use for the website that hosts this documentation, you can make copies of it in order to develop implementations of the technologies described in this documentation. You can distribute portions of it in your implementations that use these technologies, or in your documentation, as necessary to properly document the implementation. You can also distribute in your implementation, with or without modification, any schemas, IDLs, or code samples included in the documentation. This permission also applies to any documents referenced in the Open Specifications documentation.</p>
+                </section>
+                <section class="clause">
+                  <h3>No Trade Secrets</h3>
+                  <p>DarbotLabs does not claim any trade secret rights in this documentation.</p>
+                </section>
+                <section class="clause">
+                  <h3>Patents</h3>
+                  <p>DarbotLabs does not intend to pursue patenting of technologies described in the Open Specifications documentation. Neither this notice nor DarbotLabs' delivery of this documentation grants any licenses under those patents or any other patents.</p>
+                </section>
+                <section class="clause">
+                  <h3>Trademarks</h3>
+                  <p>The names of companies and products contained in this documentation might be covered by trademarks or similar intellectual property rights. This notice does not grant any licenses under those rights.</p>
+                </section>
+                <section class="clause">
+                  <h3>Synthetic Data</h3>
+                  <p>The example companies, organizations, products, domain names, email addresses, logos, people, places, and events depicted in this documentation are synthetic. No association with any real company, organization, product, domain name, email address, logo, person, place, or event is intended or should be inferred. DarbotLabs is a private research lab and not for hire.</p>
+                </section>
+                <section class="clause">
+                  <h3>Reservation of Rights</h3>
+                  <p>All other rights are reserved, and this notice does not grant any rights other than as specifically described above, whether by implication, estoppel, or otherwise.</p>
+                </section>
+                <section class="clause">
+                  <h3>Tools</h3>
+                  <p>The Open Specifications documentation may or may not require the use of Microsoft programming tools or programming environments. Best effort is always made to utilize publicly accessible and documented APIs, tooling, and related materials. In certain cases, DarbotLabs may audit and extend capabilities beyond what is currently documented.</p>
+                </section>
+                <section class="clause">
+                  <h3>No Warranty or Support</h3>
+                  <p>No warranty or support is claimed or offered. User accepts all responsibility.</p>
+                </section>
+              </div>
+
+              <aside class="side-rail" aria-label="Notice summary">
+                <section class="rail-card">
+                  <h3>Permission summary</h3>
+                  <ul>
+                    <li>Copies allowed for implementation development.</li>
+                    <li>Portions may be distributed as needed for implementation documentation.</li>
+                    <li>Schemas, IDLs, and code samples may be distributed with or without modification.</li>
+                  </ul>
+                </section>
+                <section class="rail-card">
+                  <h3>Boundaries</h3>
+                  <ul>
+                    <li>No trade secret claim in the documentation.</li>
+                    <li>No patent license grant.</li>
+                    <li>No trademark license grant.</li>
+                    <li>No warranty or support offered.</li>
+                  </ul>
+                </section>
+                <section class="rail-card">
+                  <h3>Viewport position</h3>
+                  <p><code>cell: 1,1</code></p>
+                  <p>Stable capture target for screenshots, Livetiles, and browser-rendered previews.</p>
+                </section>
+              </aside>
             </div>
-            <div class="stamp" aria-label="Research lab notice">
-              <strong>Private research lab</strong>
-              <span>Not for hire</span>
-            </div>
-          </header>
-
-          <div class="notice-grid">
-            <div class="sections">
-              <section class="clause">
-                <h3>Technical Documentation</h3>
-                <p>DarbotLabs publishes Open Specifications documentation for artificial and architectural intelligence, agents, apps, services, protocols, file formats, data portability, computer languages, encoding, encryption, and standards support. Additionally, overview documents cover inter-protocol relationships and interactions.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Copyrights</h3>
-                <p>This documentation is covered by DarbotLabs copyrights. Regardless of any other terms contained in the terms of use for the website that hosts this documentation, you can make copies of it in order to develop implementations of the technologies described in this documentation. You can distribute portions of it in your implementations that use these technologies, or in your documentation, as necessary to properly document the implementation. You can also distribute in your implementation, with or without modification, any schemas, IDLs, or code samples included in the documentation. This permission also applies to any documents referenced in the Open Specifications documentation.</p>
-              </section>
-
-              <section class="clause">
-                <h3>No Trade Secrets</h3>
-                <p>DarbotLabs does not claim any trade secret rights in this documentation.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Patents</h3>
-                <p>DarbotLabs does not intend to pursue patenting of technologies described in the Open Specifications documentation. Neither this notice nor DarbotLabs' delivery of this documentation grants any licenses under those patents or any other patents.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Trademarks</h3>
-                <p>The names of companies and products contained in this documentation might be covered by trademarks or similar intellectual property rights. This notice does not grant any licenses under those rights.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Synthetic Data</h3>
-                <p>The example companies, organizations, products, domain names, email addresses, logos, people, places, and events depicted in this documentation are synthetic. No association with any real company, organization, product, domain name, email address, logo, person, place, or event is intended or should be inferred. DarbotLabs is a private research lab and not for hire.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Reservation of Rights</h3>
-                <p>All other rights are reserved, and this notice does not grant any rights other than as specifically described above, whether by implication, estoppel, or otherwise.</p>
-              </section>
-
-              <section class="clause">
-                <h3>Tools</h3>
-                <p>The Open Specifications documentation may or may not require the use of Microsoft programming tools or programming environments. Best effort is always made to utilize publicly accessible and documented APIs, tooling, and related materials. In certain cases, DarbotLabs may audit and extend capabilities beyond what is currently documented.</p>
-              </section>
-
-              <section class="clause">
-                <h3>No Warranty or Support</h3>
-                <p>No warranty or support is claimed or offered. User accepts all responsibility.</p>
-              </section>
-            </div>
-
-            <aside class="side-rail" aria-label="Notice summary">
-              <section class="rail-card">
-                <h3>Permission summary</h3>
-                <ul>
-                  <li>Copies allowed for implementation development.</li>
-                  <li>Portions may be distributed as needed for implementation documentation.</li>
-                  <li>Schemas, IDLs, and code samples may be distributed with or without modification.</li>
-                </ul>
-              </section>
-
-              <section class="rail-card">
-                <h3>Boundaries</h3>
-                <ul>
-                  <li>No trade secret claim in the documentation.</li>
-                  <li>No patent license grant.</li>
-                  <li>No trademark license grant.</li>
-                  <li>No warranty or support offered.</li>
-                </ul>
-              </section>
-
-              <section class="rail-card">
-                <h3>Future canvas hooks</h3>
-                <p>Reserved lanes: specification cards, protocol maps, rights notices, Livetile previews, dependency graphs, and provenance timelines.</p>
-              </section>
-            </aside>
           </div>
         </article>
 
-        <div class="connector a" aria-hidden="true"></div>
-        <div class="connector b" aria-hidden="true"></div>
-        <div class="connector c" aria-hidden="true"></div>
+        <section class="viewport-cell" id="board" aria-label="Board metadata">
+          <aside class="board-meta">
+            <p class="eyebrow">Viewport grid</p>
+            <h2>Bulletin board v0.3</h2>
+            <p>Each board position is now a full viewport cell with CSS snap-scroll. This keeps renders stable for screenshot capture, browser automation, Livetiles, and future infinite-canvas navigation.</p>
+            <div class="snap-links" aria-label="Snap navigation">
+              <a class="snap-link" href="#notice">Notice viewport</a>
+              <a class="snap-link" href="#lanes">Future lanes</a>
+              <a class="snap-link" href="#rendering-model">Rendering model</a>
+            </div>
+          </aside>
+        </section>
 
-        <aside class="pin one">
-          <h3>Protocol map slot</h3>
-          <p>Future cards can link protocol families, schema versions, renderers, and data portability notes.</p>
-        </aside>
+        <section class="viewport-cell" id="lanes" aria-label="Future board lanes">
+          <div class="pin-stack">
+            <p class="eyebrow">Lost terminals board lanes</p>
+            <div class="pin-grid">
+              <aside class="pin">
+                <h3>Protocol map slot</h3>
+                <p>Future cards can link protocol families, schema versions, renderers, and data portability notes.</p>
+              </aside>
+              <aside class="pin">
+                <h3>Schema shelf</h3>
+                <p>Reserved for schemas, IDLs, examples, generated previews, and implementation notes.</p>
+              </aside>
+              <aside class="pin">
+                <h3>Livetile lane</h3>
+                <p>Reserved for scheduled snapshots, secure dashboard references, and adaptive-card-style envelopes.</p>
+              </aside>
+            </div>
+          </div>
+        </section>
 
-        <aside class="pin two">
-          <h3>Schema shelf</h3>
-          <p>Reserved for schemas, IDLs, examples, generated previews, and implementation notes.</p>
-        </aside>
+        <section class="viewport-cell" id="rendering-model" aria-label="Viewport rendering model">
+          <article class="snap-card">
+            <p class="eyebrow">Full-position rendering</p>
+            <h2>Snapscroll-ready capture positions</h2>
+            <p>Each viewport cell can be rendered as a precise browser position. A scheduled renderer can open the page, jump to a hash target, and capture a deterministic full-viewport image without overlapping canvas cards.</p>
+            <p>Future versions can add draggable cards, zoom controls, linked artifacts, and scheduled Livetile snapshots while preserving stable viewport anchors.</p>
+          </article>
+        </section>
 
-        <aside class="pin three">
-          <h3>Livetile lane</h3>
-          <p>Reserved for scheduled snapshots, secure dashboard references, and adaptive-card-style envelopes.</p>
-        </aside>
-
+        <section class="viewport-cell" aria-label="Reserved viewport">
+          <article class="snap-card">
+            <p class="eyebrow">Reserved</p>
+            <h2>Next terminal slot</h2>
+            <p>This empty viewport is reserved for the next rights notice, implementation guide, protocol diagram, or generated dashboard tile.</p>
+          </article>
+        </section>
       </section>
     </main>
   </div>
 
   <script>
-    const notice = document.getElementById("notice");
-    const shell = document.getElementById("canvasShell");
-
     document.getElementById("themeToggle").addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");
       document.documentElement.setAttribute("data-theme", current === "clippyflow" ? "nightflow" : "clippyflow");
-    });
-
-    document.getElementById("focusNotice").addEventListener("click", () => {
-      notice.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-    });
-
-    window.addEventListener("load", () => {
-      if (window.matchMedia("(min-width: 981px)").matches) {
-        shell.scrollTo({ left: 0, top: 0 });
-      }
     });
   </script>
 </body>
